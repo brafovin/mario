@@ -1,0 +1,465 @@
+/* The Little Child - Styles */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+    background: linear-gradient(180deg, #ffd8e8 0%, #ffeaf1 100%);
+    min-height: 100vh;
+    color: #333;
+    overflow-x: hidden;
+}
+
+#game {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.screen {
+    display: none;
+    animation: fadeIn .4s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* -------- Startbildschirm -------- */
+#start-screen, #end-screen {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+#start-screen h1, #end-screen h1 {
+    font-size: 3rem;
+    color: #d14b8f;
+    text-shadow: 2px 2px 0 #fff;
+    margin-bottom: .4rem;
+}
+.subtitle { color: #7b4a60; font-size: 1.2rem; margin-bottom: 2rem; }
+.intro { max-width: 500px; margin: 1.5rem auto; line-height: 1.6; font-size: 1.05rem; }
+.child-preview {
+    display: flex; justify-content: center;
+    margin: 1rem 0 .5rem;
+    min-height: 260px;
+}
+
+.big-btn {
+    background: linear-gradient(180deg, #ff7ab6, #d14b8f);
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    padding: .9rem 2rem;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #a13770, 0 8px 16px rgba(0,0,0,.1);
+    transition: transform .1s, box-shadow .1s;
+}
+.big-btn:hover { transform: translateY(-2px); }
+.big-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #a13770; }
+
+/* -------- HUD -------- */
+#hud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    background: white;
+    border-radius: 16px;
+    padding: .6rem .8rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    margin-bottom: 1rem;
+    align-items: center;
+}
+.stat {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    background: #fff5fa;
+    border-radius: 10px;
+    padding: .3rem .6rem;
+    font-size: .9rem;
+    font-weight: 600;
+}
+.stat .icon { font-size: 1.1rem; }
+.bar {
+    width: 80px;
+    height: 10px;
+    background: #f0d8e3;
+    border-radius: 999px;
+    overflow: hidden;
+}
+.fill {
+    height: 100%;
+    width: 80%;
+    border-radius: 999px;
+    transition: width .4s ease, background .4s ease;
+}
+.fill.happy   { background: linear-gradient(90deg, #ffd36e, #ff9a3c); }
+.fill.hunger  { background: linear-gradient(90deg, #8ad26b, #3fa34d); }
+.fill.energy  { background: linear-gradient(90deg, #6ec9ff, #2a7fd1); }
+.fill.hygiene { background: linear-gradient(90deg, #c7b7ff, #7a55d6); }
+.fill.school  { background: linear-gradient(90deg, #ff9ebf, #d14b8f); }
+.fill.low     { background: linear-gradient(90deg, #ff7a7a, #c13030) !important; }
+
+/* -------- Szene -------- */
+#scene {
+    position: relative;
+    height: 360px;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 -40px 0 #f9e4ee, 0 2px 10px rgba(0,0,0,.08);
+}
+#scene-bg {
+    position: absolute;
+    inset: 0;
+    transition: background .6s ease;
+    background: linear-gradient(180deg, #fff0f6 0%, #ffe0ec 70%, #f9c6d9 70%, #f9c6d9 100%);
+}
+#scene-label {
+    position: absolute;
+    top: 10px; left: 12px;
+    background: rgba(255,255,255,.85);
+    padding: .2rem .7rem;
+    border-radius: 999px;
+    font-weight: 700;
+    color: #8a3a65;
+    font-size: .9rem;
+    z-index: 5;
+}
+#outfit-label {
+    position: absolute;
+    top: 10px; right: 12px;
+    background: rgba(255,255,255,.85);
+    padding: .2rem .7rem;
+    border-radius: 999px;
+    font-size: .8rem;
+    color: #8a3a65;
+    z-index: 5;
+}
+
+/* -------- Kind-Sprite -------- */
+.child-sprite {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 220px;
+    animation: bob 2.4s ease-in-out infinite;
+}
+.child-sprite.big { position: relative; bottom: auto; left: auto; transform: none; width: 150px; height: 270px; }
+
+@keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(-4px); }
+}
+.child-sprite.big { animation: bobBig 2.4s ease-in-out infinite; }
+@keyframes bobBig {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-5px); }
+}
+
+/* Kopf (helle Haut) */
+.child-sprite .head {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 66px;
+    background: #ffe3cf;
+    border-radius: 50% 50% 48% 48%;
+    z-index: 3;
+}
+/* Augen (blau) */
+.child-sprite .eye {
+    position: absolute;
+    top: 30px;
+    width: 9px;
+    height: 12px;
+    background: #2a7fd1;
+    border-radius: 50%;
+    box-shadow: inset -1px -2px 0 #1c5a9a, 1px -1px 0 #fff;
+}
+.child-sprite .eye.left  { left: 13px; }
+.child-sprite .eye.right { right: 13px; }
+.child-sprite .head::before { /* Wangen */
+    content: "";
+    position: absolute;
+    bottom: 14px; left: 8px;
+    width: 10px; height: 6px;
+    background: #ffb7c9;
+    border-radius: 50%;
+    box-shadow: 34px 0 #ffb7c9;
+    opacity: .7;
+}
+/* Mund */
+.child-sprite .mouth {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px; height: 6px;
+    border-bottom: 2px solid #b04060;
+    border-radius: 0 0 14px 14px;
+    transition: all .3s;
+}
+.child-sprite.sad .mouth {
+    border-bottom: none;
+    border-top: 2px solid #b04060;
+    border-radius: 14px 14px 0 0;
+}
+.child-sprite.sleeping .eye {
+    height: 2px; background: #333; box-shadow: none; top: 36px;
+    border-radius: 0;
+}
+
+/* Lange schwarze Haare hinten */
+.child-sprite .hair-back {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 150px;
+    background: #1a1a1a;
+    border-radius: 40px 40px 30px 30px;
+    z-index: 2;
+}
+/* Haare vorne (Pony) */
+.child-sprite .hair-front {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 30px;
+    background: #1a1a1a;
+    border-radius: 40% 40% 30% 30%;
+    z-index: 4;
+}
+.child-sprite .hair-front::before {
+    content: "";
+    position: absolute;
+    top: 20px; left: -4px;
+    width: 20px; height: 22px;
+    background: #1a1a1a;
+    border-radius: 50% 20% 50% 50%;
+    transform: rotate(-10deg);
+}
+.child-sprite .hair-front::after {
+    content: "";
+    position: absolute;
+    top: 20px; right: -4px;
+    width: 20px; height: 22px;
+    background: #1a1a1a;
+    border-radius: 20% 50% 50% 50%;
+    transform: rotate(10deg);
+}
+
+/* Körper – dünn */
+.child-sprite .body {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 80px;
+    background: #ff87b2;
+    border-radius: 14px 14px 6px 6px;
+    z-index: 2;
+}
+/* Arme – dünn, helle Haut */
+.child-sprite .arm {
+    position: absolute;
+    top: 88px;
+    width: 12px;
+    height: 62px;
+    background: #ffe3cf;
+    border-radius: 8px;
+    z-index: 1;
+}
+.child-sprite .arm.left  { left: calc(50% - 34px); transform: rotate(8deg); }
+.child-sprite .arm.right { right: calc(50% - 34px); transform: rotate(-8deg); }
+/* Beine – dünn */
+.child-sprite .leg {
+    position: absolute;
+    top: 158px;
+    width: 14px;
+    height: 50px;
+    background: #ffe3cf;
+    border-radius: 8px;
+    z-index: 1;
+}
+.child-sprite .leg.left  { left: calc(50% - 16px); }
+.child-sprite .leg.right { right: calc(50% - 16px); }
+.child-sprite .leg::after {
+    content: "";
+    position: absolute;
+    bottom: -4px; left: -2px;
+    width: 18px; height: 8px;
+    background: #5a3a20;
+    border-radius: 4px;
+}
+
+/* Outfit-Varianten */
+.child-sprite.outfit-school .body { background: #6a8ccc; }
+.child-sprite.outfit-school .body::after {
+    content: "🎒";
+    position: absolute;
+    left: -18px; top: 6px;
+    font-size: 24px;
+}
+.child-sprite.outfit-pajama .body { background: #b39ddb; }
+.child-sprite.outfit-pajama .body::before {
+    content: "";
+    position: absolute;
+    inset: 5px 0;
+    background-image: radial-gradient(#fff 2px, transparent 2px);
+    background-size: 10px 10px;
+    opacity: .6;
+}
+.child-sprite.outfit-dress .body {
+    background: linear-gradient(180deg, #ff87b2 60%, #ffb7c9 60%);
+    width: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 90px;
+    border-radius: 14px 14px 50% 50%;
+}
+.child-sprite.outfit-towel .body { background: #ffffff; }
+.child-sprite.outfit-towel .body::after {
+    content: "🛁";
+    position: absolute;
+    left: 50%; top: -10px;
+    transform: translateX(-50%);
+    font-size: 20px;
+}
+
+/* Szenen-Hintergründe */
+.scene-home    #scene-bg { background: linear-gradient(180deg, #fff0f6 0%, #ffe0ec 70%, #f9c6d9 70%); }
+.scene-school  #scene-bg { background: linear-gradient(180deg, #cfe8ff 0%, #a8ceff 60%, #e8f0c7 60%); }
+.scene-work    #scene-bg { background: linear-gradient(180deg, #2e3a55 0%, #5a6b8c 70%, #8a9ab8 70%); }
+.scene-shop    #scene-bg { background: linear-gradient(180deg, #fff4c9 0%, #ffe07a 60%, #ffc94a 60%); }
+.scene-clothes #scene-bg { background: linear-gradient(180deg, #ffe0f0 0%, #ffb3d9 60%, #ff80bf 60%); }
+.scene-park    #scene-bg { background: linear-gradient(180deg, #cfe8ff 0%, #9ed86a 60%, #6fbf3f 60%); }
+.scene-bath    #scene-bg { background: linear-gradient(180deg, #d6f0ff 0%, #8ad0f5 60%, #5cb8e6 60%); }
+.scene-night   #scene-bg { background: linear-gradient(180deg, #1a2144 0%, #3a3a66 60%, #5a4a7a 60%); }
+
+/* -------- Speech bubble -------- */
+#speech-bubble {
+    position: absolute;
+    top: 30px;
+    left: 58%;
+    background: white;
+    border-radius: 16px;
+    padding: .6rem 1rem;
+    max-width: 200px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    font-size: .9rem;
+    z-index: 10;
+    animation: pop .3s ease;
+}
+#speech-bubble::after {
+    content: "";
+    position: absolute;
+    left: -10px; bottom: 16px;
+    border: 8px solid transparent;
+    border-right-color: white;
+}
+@keyframes pop {
+    from { transform: scale(.6); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+.hidden { display: none !important; }
+
+/* -------- Actions -------- */
+#actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: .6rem;
+    margin: 1rem 0;
+}
+.action-btn {
+    background: white;
+    border: 2px solid #ffbed7;
+    border-radius: 14px;
+    padding: .8rem .7rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #8a3a65;
+    cursor: pointer;
+    transition: transform .1s, box-shadow .1s, background .2s;
+    box-shadow: 0 2px 0 #ffbed7;
+}
+.action-btn:hover { background: #fff0f6; transform: translateY(-2px); box-shadow: 0 4px 0 #ffbed7; }
+.action-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 #ffbed7; }
+.action-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: 0 2px 0 #ffbed7; }
+
+/* -------- Log -------- */
+#log {
+    background: white;
+    border-radius: 14px;
+    padding: .8rem 1rem;
+    max-height: 180px;
+    overflow-y: auto;
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+}
+#log h3 { color: #d14b8f; margin-bottom: .4rem; font-size: 1rem; }
+#log-list { list-style: none; }
+#log-list li {
+    padding: .25rem 0;
+    border-bottom: 1px dashed #f3d5e2;
+    font-size: .9rem;
+}
+#log-list li:last-child { border-bottom: none; }
+
+/* -------- Modal -------- */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: fadeIn .2s ease;
+}
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 1.8rem;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.3);
+}
+.modal-content h2 { color: #d14b8f; margin-bottom: .7rem; }
+.modal-content p { margin-bottom: 1.2rem; line-height: 1.5; }
+#modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+#modal-options button {
+    background: #fff0f6;
+    border: 2px solid #ffbed7;
+    border-radius: 12px;
+    padding: .7rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background .15s;
+    color: #8a3a65;
+    font-weight: 600;
+}
+#modal-options button:hover { background: #ffd8e8; }
+
+@media (max-width: 640px) {
+    #hud { font-size: .8rem; }
+    .bar { width: 50px; }
+    #scene { height: 300px; }
+    #start-screen h1 { font-size: 2rem; }
+}

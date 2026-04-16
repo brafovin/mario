@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Little Child</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game">
+        <!-- Startbildschirm -->
+        <div id="start-screen" class="screen active">
+            <h1>The Little Child</h1>
+            <p class="subtitle">Sei ein liebevolles Elternteil für Mia</p>
+            <div class="child-preview">
+                <div class="child-sprite big">
+                    <div class="hair-back"></div>
+                    <div class="head">
+                        <div class="eye left"></div>
+                        <div class="eye right"></div>
+                        <div class="mouth"></div>
+                    </div>
+                    <div class="hair-front"></div>
+                    <div class="body"></div>
+                    <div class="arm left"></div>
+                    <div class="arm right"></div>
+                    <div class="leg left"></div>
+                    <div class="leg right"></div>
+                </div>
+            </div>
+            <p class="intro">
+                Das ist <strong>Mia</strong>, 8 Jahre alt, 3. Klasse.<br>
+                Lange schwarze Haare, blaue Augen, ein liebes Mädchen.<br>
+                Du bist ihr Elternteil &ndash; sorge gut für sie!
+            </p>
+            <button id="start-btn" class="big-btn">Spiel starten</button>
+        </div>
+
+        <!-- Hauptspiel -->
+        <div id="main-screen" class="screen">
+            <header id="hud">
+                <div class="stat" title="Glück"><span class="icon">😊</span><div class="bar"><div id="bar-happy" class="fill happy"></div></div></div>
+                <div class="stat" title="Hunger"><span class="icon">🍎</span><div class="bar"><div id="bar-hunger" class="fill hunger"></div></div></div>
+                <div class="stat" title="Energie"><span class="icon">⚡</span><div class="bar"><div id="bar-energy" class="fill energy"></div></div></div>
+                <div class="stat" title="Sauberkeit"><span class="icon">🧼</span><div class="bar"><div id="bar-hygiene" class="fill hygiene"></div></div></div>
+                <div class="stat" title="Schule"><span class="icon">📚</span><div class="bar"><div id="bar-school" class="fill school"></div></div></div>
+                <div class="stat money" title="Geld"><span class="icon">💶</span><span id="money">50</span> €</div>
+                <div class="stat day" title="Tag"><span class="icon">📅</span>Tag <span id="day">1</span></div>
+                <div class="stat time" title="Uhrzeit"><span class="icon">🕒</span><span id="time">07:00</span></div>
+            </header>
+
+            <main id="scene">
+                <div id="scene-bg"></div>
+                <div id="scene-label">Zuhause</div>
+                <div id="child" class="child-sprite">
+                    <div class="hair-back"></div>
+                    <div class="head">
+                        <div class="eye left"></div>
+                        <div class="eye right"></div>
+                        <div class="mouth"></div>
+                    </div>
+                    <div class="hair-front"></div>
+                    <div class="body"></div>
+                    <div class="arm left"></div>
+                    <div class="arm right"></div>
+                    <div class="leg left"></div>
+                    <div class="leg right"></div>
+                </div>
+                <div id="speech-bubble" class="hidden"></div>
+                <div id="outfit-label"></div>
+            </main>
+
+            <section id="actions">
+                <button class="action-btn" data-action="school">🎒 Zur Schule bringen</button>
+                <button class="action-btn" data-action="work">💼 Zur Arbeit gehen</button>
+                <button class="action-btn" data-action="cook">🍳 Essen machen</button>
+                <button class="action-btn" data-action="shop">🛒 Einkaufen</button>
+                <button class="action-btn" data-action="clothes">👗 Kleidung kaufen</button>
+                <button class="action-btn" data-action="play">🧸 Spielen</button>
+                <button class="action-btn" data-action="bath">🛁 Baden</button>
+                <button class="action-btn" data-action="sleep">🌙 Schlafen</button>
+            </section>
+
+            <aside id="log">
+                <h3>Tagebuch</h3>
+                <ul id="log-list"></ul>
+            </aside>
+        </div>
+
+        <!-- Modale Ereignisse -->
+        <div id="modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="modal-title"></h2>
+                <p id="modal-text"></p>
+                <div id="modal-options"></div>
+                <button id="modal-close" class="big-btn hidden">Weiter</button>
+            </div>
+        </div>
+
+        <!-- Game Over / Ende -->
+        <div id="end-screen" class="screen">
+            <h1 id="end-title">Ende</h1>
+            <p id="end-text"></p>
+            <button id="restart-btn" class="big-btn">Nochmal spielen</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
