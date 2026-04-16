@@ -423,6 +423,95 @@ const actions = {
         updateHUD();
     },
 
+    async talk() {
+        const topic = await showModal("Mit Abby reden",
+            "Worüber möchtest du mit Abby sprechen?", [
+            { label: '🏫 "Wie war dein Tag?"', value: "day" },
+            { label: '💭 "Hast du Sorgen?"', value: "worries" },
+            { label: '❤️ "Ich hab dich lieb."', value: "love" },
+            { label: '🌈 "Erzähl mir was Schönes."', value: "happy" },
+            { label: '🎈 "Was wünschst du dir?"', value: "wish" },
+            { label: "Abbrechen", value: null },
+        ]);
+        if (!topic) return;
+
+        advanceTime(15);
+        let reply = "";
+        let logMsg = "";
+
+        if (topic === "day") {
+            if (state.flags.bullyLevel >= 2) {
+                reply = "In der Schule war es schlimm... sie ärgern mich jeden Tag.";
+                state.stats.happy = clamp(state.stats.happy + 8);
+            } else if (state.flags.bullyLevel === 1) {
+                reply = "Ging so... ein paar Kinder waren gemein zu mir.";
+                state.stats.happy = clamp(state.stats.happy + 10);
+            } else if (state.flags.schoolDoneToday) {
+                reply = "Wir haben heute Kunst gemacht, das war schön!";
+                state.stats.happy = clamp(state.stats.happy + 14);
+            } else {
+                reply = "Heute war ich ja nicht in der Schule.";
+                state.stats.happy = clamp(state.stats.happy + 6);
+            }
+            logMsg = "💬 Ihr habt über den Tag geredet.";
+
+        } else if (topic === "worries") {
+            if (state.flags.bullyLevel > 0) {
+                reply = "Ich hab Angst, morgen wieder in die Schule zu gehen...";
+                state.stats.happy = clamp(state.stats.happy + 15);
+                state.flags.bullyLevel = Math.max(0, state.flags.bullyLevel - 1);
+            } else if (state.stats.hunger < 40) {
+                reply = "Mein Bauch tut weh... ich hab Hunger.";
+                state.stats.happy = clamp(state.stats.happy + 4);
+            } else if (state.stats.energy < 40) {
+                reply = "Ich bin so müde in letzter Zeit.";
+                state.stats.happy = clamp(state.stats.happy + 4);
+            } else {
+                reply = "Nein, gerade nicht. Danke, dass du fragst!";
+                state.stats.happy = clamp(state.stats.happy + 10);
+            }
+            logMsg = "💬 Abby hat sich dir geöffnet.";
+
+        } else if (topic === "love") {
+            reply = "Ich hab dich auch ganz doll lieb! 💕";
+            state.stats.happy = clamp(state.stats.happy + 18);
+            if (state.flags.bullyLevel > 0) {
+                state.flags.bullyLevel = Math.max(0, state.flags.bullyLevel - 1);
+            }
+            logMsg = "❤️ Ihr habt euch umarmt. +Glück";
+
+        } else if (topic === "happy") {
+            const stories = [
+                "Heute hat ein Schmetterling auf meiner Hand gesessen!",
+                "Meine Freundin Lena hat mir ihren Glitzerstift geschenkt!",
+                "Ich kann jetzt bis 100 zählen! Soll ich es dir zeigen?",
+                'In der Pause haben wir "Fangen" gespielt und ich war die Schnellste!',
+                "Ich hab eine schöne Wolke gesehen, die sah aus wie ein Hase.",
+            ];
+            reply = stories[Math.floor(Math.random() * stories.length)];
+            state.stats.happy = clamp(state.stats.happy + 12);
+            logMsg = "🌈 Abby hat dir etwas Schönes erzählt.";
+
+        } else if (topic === "wish") {
+            const wishes = [
+                { t: "Ich wünsch mir ein neues Buch über Pferde...", s: "school", v: 3 },
+                { t: "Ein großes Stofftier wär schön. 🧸", s: "happy", v: 5 },
+                { t: "Darf ich mal im Park übernachten? Im Zelt!", s: "happy", v: 4 },
+                { t: "Ein Geschwisterchen... aber nur ein kleines. 😊", s: "happy", v: 3 },
+                { t: "Ich wünsch mir, dass ich nie wieder gemobbt werde.", s: "happy", v: 8 },
+            ];
+            const w = wishes[Math.floor(Math.random() * wishes.length)];
+            reply = w.t;
+            state.stats[w.s] = clamp(state.stats[w.s] + w.v);
+            state.stats.happy = clamp(state.stats.happy + 6);
+            logMsg = "🎈 Abby hat von ihren Wünschen erzählt.";
+        }
+
+        say(reply, 4500);
+        log(logMsg);
+        updateHUD();
+    },
+
     async play() {
         const choice = await showModal("Spielen", "Was wollt ihr zusammen machen?", [
             { label: "🧸 Zu Hause basteln (30 Min)", value: "craft" },
