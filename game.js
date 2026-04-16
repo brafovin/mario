@@ -16,6 +16,8 @@ const state = {
         workDoneToday: false,
         wardrobe: ["Kleid"],
         groceries: 2,
+        bullyLevel: 0,      // 0 = kein Mobbing, steigt wenn nichts passiert
+        teacherInformed: false, // Lehrerin weiß Bescheid (reduziert Mobbing)
     },
     scene: "home",
     outfit: "dress", // dress | school | pajama | towel
@@ -165,6 +167,72 @@ function showModal(title, text, options = []) {
     });
 }
 
+// ---------- Mobbing-Ereignis ----------
+async function handleBullying() {
+    state.flags.bullyLevel = Math.min(3, state.flags.bullyLevel + 1);
+    setMood("sad");
+    state.stats.happy = clamp(state.stats.happy - 25);
+    state.stats.school = clamp(state.stats.school - 5);
+
+    const reason = state.stats.hygiene < 40
+        ? "Sie sagen, sie stinkt und ihre Kleidung sei schmutzig."
+        : "Sie lachen über ihr Aussehen und nennen sie „komisch“.";
+
+    say("Mama/Papa, ich will nicht mehr hin... 😢", 4000);
+    log("💔 Abby wurde in der Schule gemobbt.");
+
+    const choice = await showModal(
+        "Abby kommt weinend heim",
+        `Abby ist traurig. Kinder in ihrer Klasse haben sie geärgert.<br>
+         <em>${reason}</em><br><br>
+         Wie reagierst du als Elternteil?`,
+        [
+            { label: "🤗 In den Arm nehmen und trösten", value: "comfort" },
+            { label: "👂 Zuhören, was genau passiert ist", value: "listen" },
+            { label: "🏫 Morgen mit der Lehrerin sprechen", value: "teacher" },
+            { label: "💪 Ihr sagen, sie soll sich wehren", value: "tough" },
+            { label: "🤷 „Das geht vorbei“ – nichts tun", value: "ignore" },
+        ]);
+
+    if (choice === "comfort") {
+        advanceTime(30);
+        state.stats.happy = clamp(state.stats.happy + 22);
+        state.flags.bullyLevel = Math.max(0, state.flags.bullyLevel - 1);
+        say("Danke Mama/Papa... ich fühl mich besser. 💕", 3500);
+        log("🤗 Du hast Abby in den Arm genommen. +Glück");
+    } else if (choice === "listen") {
+        advanceTime(25);
+        state.stats.happy = clamp(state.stats.happy + 14);
+        state.stats.school = clamp(state.stats.school + 3);
+        say("Es tut gut, dass du zuhörst.", 3000);
+        log("👂 Du hast Abby zugehört. +Glück");
+        await showModal("Abby erzählt",
+            "Ein paar Kinder ärgern sie immer wieder auf dem Schulhof. " +
+            "Sie fühlt sich einsam. Vielleicht hilft es, mit der Lehrerin zu reden.");
+    } else if (choice === "teacher") {
+        state.flags.teacherInformed = true;
+        state.flags.bullyLevel = Math.max(0, state.flags.bullyLevel - 2);
+        state.stats.happy = clamp(state.stats.happy + 10);
+        say("Gut, dass du das machst, Mama/Papa.", 3000);
+        log("🏫 Du hast dich entschieden, mit der Lehrerin zu sprechen.");
+        await showModal("Gute Entscheidung",
+            "Du wirst morgen früh mit der Lehrerin sprechen. " +
+            "Mobbing hört selten von allein auf &ndash; Abby braucht Erwachsene, die sie schützen.");
+    } else if (choice === "tough") {
+        advanceTime(10);
+        state.stats.happy = clamp(state.stats.happy - 8);
+        state.flags.bullyLevel = Math.min(3, state.flags.bullyLevel + 1);
+        say("Aber... ich bin doch viel kleiner als die.", 3500);
+        log("😟 Abby fühlt sich noch mehr allein gelassen.");
+    } else {
+        // ignore
+        state.stats.happy = clamp(state.stats.happy - 15);
+        state.flags.bullyLevel = Math.min(3, state.flags.bullyLevel + 1);
+        say("Niemand versteht mich... 😭", 3500);
+        log("💔 Abby wurde allein gelassen. Das Mobbing wird schlimmer.");
+    }
+}
+
 // ---------- Aktionen ----------
 const actions = {
     async school() {
@@ -188,6 +256,16 @@ const actions = {
         say("Tschüss! Bis später! 🎒");
         log("🚸 Abby in der Schule (7–14 Uhr).");
         advanceTime(20); // Bringweg
+
+        // Falls letztes Mal beschlossen wurde, mit der Lehrerin zu sprechen
+        if (state.flags.teacherInformed && state.flags.bullyLevel >= 0) {
+            await showModal("Gespräch mit der Lehrerin",
+                "Du hast die Lehrerin vor dem Unterricht angesprochen. " +
+                "Sie hört dir ernst zu und verspricht, die Klasse für das " +
+                "Thema Mobbing zu sensibilisieren.");
+            log("🧑‍🏫 Du hast mit der Lehrerin gesprochen.");
+            state.flags.bullyLevel = Math.max(0, state.flags.bullyLevel - 1);
+        }
         // Schule dauert bis 14:00
         const schoolEnd = 14 * 60;
         const schoolHours = Math.max(0, schoolEnd - state.time);
@@ -199,10 +277,24 @@ const actions = {
         state.flags.atSchool = false;
         setScene("home", "Zuhause");
         setOutfit("dress", "Kleid");
-        say("Ich bin wieder da!");
         log("🏠 Abby ist aus der Schule zurück (14 Uhr).");
 
-        // Zufälliges Schulereignis
+        // --- Mobbing-Check ---
+        // Höhere Wahrscheinlichkeit wenn: schmutzig, schon gemobbt (nicht gelöst),
+        // Lehrerin nicht informiert
+        let bullyChance = 0.22;
+        if (state.stats.hygiene < 40) bullyChance += 0.25;
+        if (state.flags.bullyLevel > 0) bullyChance += 0.20 * state.flags.bullyLevel;
+        if (state.flags.teacherInformed) bullyChance *= 0.35;
+
+        if (Math.random() < bullyChance) {
+            await handleBullying();
+            updateHUD();
+            return;
+        }
+
+        // Zufälliges gutes Schulereignis
+        say("Ich bin wieder da!");
         const roll = Math.random();
         if (roll < 0.3) {
             const choice = await showModal(
