@@ -32,125 +32,15 @@ const outfitLabel = $("#outfit-label");
 const logList = $("#log-list");
 const modal = $("#modal");
 
-// ---------- Abby als SVG-Illustration (Wasserfarbe + Tinte) ----------
-const ABBY_SVG = `
-<svg viewBox="0 0 220 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
-  <defs>
-    <filter id="r" x="-6%" y="-6%" width="112%" height="112%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="4" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/>
-    </filter>
-    <filter id="w" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="2" result="t"/>
-      <feDisplacementMap in="SourceGraphic" in2="t" scale="5"/>
-    </filter>
-    <radialGradient id="sk" cx="50%" cy="35%" r="75%">
-      <stop offset="0%" stop-color="#fbe3ca"/><stop offset="60%" stop-color="#f1ccae"/><stop offset="100%" stop-color="#cfa17e"/>
-    </radialGradient>
-    <radialGradient id="hr" cx="45%" cy="25%" r="85%">
-      <stop offset="0%" stop-color="#2a1d14"/><stop offset="60%" stop-color="#140a06"/><stop offset="100%" stop-color="#050302"/>
-    </radialGradient>
-    <radialGradient id="dr" cx="50%" cy="25%" r="85%">
-      <stop offset="0%" stop-color="#ffbed2"/><stop offset="55%" stop-color="#e88aab"/><stop offset="100%" stop-color="#a14968"/>
-    </radialGradient>
-    <radialGradient id="ir" cx="50%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#7cb4dc"/><stop offset="60%" stop-color="#2e6ba0"/><stop offset="100%" stop-color="#153a62"/>
-    </radialGradient>
-    <radialGradient id="pj" cx="50%" cy="20%" r="90%">
-      <stop offset="0%" stop-color="#c9b6e6"/><stop offset="100%" stop-color="#6e5a98"/>
-    </radialGradient>
-    <radialGradient id="sh" cx="50%" cy="30%" r="80%">
-      <stop offset="0%" stop-color="#6a4326"/><stop offset="100%" stop-color="#2e1a0c"/>
-    </radialGradient>
-  </defs>
-  <ellipse cx="110" cy="478" rx="58" ry="6" fill="#000" opacity="0.18" filter="url(#r)"/>
-  <path filter="url(#r)" fill="url(#hr)"
-    d="M 72 72 Q 38 96 30 190 Q 25 300 42 360 Q 52 374 68 358 L 74 260 Q 76 150 88 92 Z
-       M 148 72 Q 182 96 190 190 Q 195 300 178 360 Q 168 374 152 358 L 146 260 Q 144 150 132 92 Z"/>
-  <path filter="url(#r)" fill="url(#sk)" d="M 86 330 Q 82 400 89 455 Q 96 463 103 455 Q 101 400 97 330 Z"/>
-  <path filter="url(#r)" fill="url(#sk)" d="M 134 330 Q 138 400 131 455 Q 124 463 117 455 Q 119 400 123 330 Z"/>
-  <path filter="url(#r)" fill="url(#sh)" d="M 82 455 Q 78 478 92 478 Q 106 478 106 465 L 102 452 Z"/>
-  <path filter="url(#r)" fill="url(#sh)" d="M 138 455 Q 142 478 128 478 Q 114 478 114 465 L 118 452 Z"/>
-  <path filter="url(#r)" fill="url(#sk)" d="M 68 175 Q 52 250 60 318 Q 66 326 74 320 Q 82 250 86 188 Z"/>
-  <path filter="url(#r)" fill="url(#sk)" d="M 152 175 Q 168 250 160 318 Q 154 326 146 320 Q 138 250 134 188 Z"/>
-  <path filter="url(#r)" fill="url(#sk)" d="M 82 150 Q 100 170 138 150 L 144 230 Q 100 244 76 230 Z"/>
-
-  <g class="o-dress">
-    <path filter="url(#w)" fill="url(#dr)" d="M 72 168 Q 100 186 148 168 L 178 345 Q 100 362 42 345 Z"/>
-    <path fill="#8c3d5d" opacity="0.35" d="M 78 168 Q 100 180 142 168 L 142 188 Q 100 198 78 188 Z"/>
-    <path stroke="#8c3d5d" stroke-width="1.4" fill="none" opacity="0.4" d="M 82 240 Q 88 290 76 340"/>
-    <path stroke="#8c3d5d" stroke-width="1.4" fill="none" opacity="0.4" d="M 138 240 Q 132 290 144 340"/>
-    <path stroke="#8c3d5d" stroke-width="1" fill="none" opacity="0.3" d="M 110 200 Q 108 275 114 340"/>
-  </g>
-  <g class="o-school">
-    <path filter="url(#w)" fill="#6b4a2a" d="M 76 230 Q 100 242 144 230 L 160 335 Q 100 352 60 335 Z"/>
-    <path filter="url(#w)" fill="#f5eedc" d="M 78 168 Q 100 186 142 168 L 148 232 Q 100 244 72 232 Z"/>
-    <path fill="#ffffff" stroke="#b8a080" stroke-width="0.8" d="M 88 170 L 100 188 L 112 170 Z"/>
-    <path fill="#b83838" d="M 94 188 L 106 188 L 104 196 L 96 196 Z"/>
-    <path filter="url(#r)" fill="#7a3c28" d="M 64 175 L 72 175 L 72 285 L 64 290 Z"/>
-    <path filter="url(#r)" fill="#7a3c28" d="M 148 175 L 156 175 L 156 290 L 148 285 Z"/>
-  </g>
-  <g class="o-pajama">
-    <path filter="url(#w)" fill="url(#pj)" d="M 72 168 Q 100 186 148 168 L 160 340 Q 100 356 60 340 Z"/>
-    <g fill="#fff8e8" opacity="0.65">
-      <circle cx="88" cy="200" r="2.8"/><circle cx="122" cy="208" r="2.8"/>
-      <circle cx="100" cy="230" r="2.8"/><circle cx="82" cy="252" r="2.8"/>
-      <circle cx="130" cy="260" r="2.8"/><circle cx="110" cy="280" r="2.8"/>
-      <circle cx="92" cy="305" r="2.8"/><circle cx="128" cy="315" r="2.8"/>
-    </g>
-  </g>
-  <g class="o-towel">
-    <path filter="url(#w)" fill="#f7efe0" stroke="#c7b890" stroke-width="1"
-      d="M 70 168 Q 100 185 150 168 L 155 298 Q 100 312 65 298 Z"/>
-    <line x1="75" y1="200" x2="145" y2="200" stroke="#cabe96" stroke-width="1" opacity="0.6"/>
-    <line x1="75" y1="235" x2="145" y2="235" stroke="#cabe96" stroke-width="1" opacity="0.6"/>
-    <line x1="75" y1="270" x2="145" y2="270" stroke="#cabe96" stroke-width="1" opacity="0.6"/>
-  </g>
-
-  <path fill="url(#sk)" d="M 92 138 L 93 160 Q 100 165 107 160 L 108 138 Z"/>
-  <path fill="#c48f74" opacity="0.35" d="M 92 150 Q 100 156 108 150 L 108 160 Q 100 164 92 160 Z"/>
-  <ellipse cx="61" cy="98" rx="5" ry="9" fill="url(#sk)" filter="url(#r)"/>
-  <ellipse cx="139" cy="98" rx="5" ry="9" fill="url(#sk)" filter="url(#r)"/>
-  <ellipse cx="100" cy="92" rx="38" ry="46" fill="url(#sk)" filter="url(#r)"/>
-  <path filter="url(#r)" fill="url(#hr)"
-    d="M 62 72 Q 70 38 100 46 Q 132 38 138 72 Q 142 90 130 92 Q 120 80 108 86 Q 100 82 92 86 Q 80 80 70 92 Q 58 90 62 72 Z"/>
-  <path filter="url(#r)" fill="url(#hr)" opacity="0.95"
-    d="M 60 78 Q 48 160 52 270 Q 58 276 65 270 Q 70 180 74 90 Z"/>
-  <path filter="url(#r)" fill="url(#hr)" opacity="0.95"
-    d="M 160 78 Q 172 160 168 270 Q 162 276 155 270 Q 150 180 146 90 Z"/>
-  <path d="M 77 92 Q 85 88 92 92" stroke="#150a06" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-  <path d="M 108 92 Q 115 88 123 92" stroke="#150a06" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-
-  <g class="eyes-open">
-    <ellipse cx="85" cy="104" rx="5" ry="6" fill="#fdfaf0"/>
-    <ellipse cx="115" cy="104" rx="5" ry="6" fill="#fdfaf0"/>
-    <circle cx="85" cy="105" r="3.8" fill="url(#ir)"/>
-    <circle cx="115" cy="105" r="3.8" fill="url(#ir)"/>
-    <circle cx="85" cy="105" r="1.8" fill="#060a14"/>
-    <circle cx="115" cy="105" r="1.8" fill="#060a14"/>
-    <circle cx="86.5" cy="103" r="1" fill="#ffffff"/>
-    <circle cx="116.5" cy="103" r="1" fill="#ffffff"/>
-    <path d="M 80 100 Q 85 98 90 100" stroke="#0a0604" stroke-width="1.2" fill="none"/>
-    <path d="M 110 100 Q 115 98 120 100" stroke="#0a0604" stroke-width="1.2" fill="none"/>
-  </g>
-  <g class="eyes-closed">
-    <path d="M 80 105 Q 85 110 90 105" stroke="#150a06" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-    <path d="M 110 105 Q 115 110 120 105" stroke="#150a06" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-  </g>
-
-  <path d="M 98 112 Q 96 120 94 124 Q 100 128 106 124 Q 104 120 102 112"
-        stroke="#b57f64" stroke-width="0.9" fill="none" stroke-linecap="round"/>
-  <ellipse cx="74" cy="121" rx="8" ry="5" fill="#eb97a7" opacity="0.55"/>
-  <ellipse cx="126" cy="121" rx="8" ry="5" fill="#eb97a7" opacity="0.55"/>
-
-  <path class="mouth-happy" d="M 90 130 Q 100 138 110 130 Q 100 134 90 130 Z" fill="#b84a64" stroke="#7a2c42" stroke-width="1"/>
-  <path class="mouth-sad" d="M 90 134 Q 100 127 110 134" stroke="#7a2c42" stroke-width="1.5" fill="none"/>
-  <ellipse class="mouth-sleep" cx="100" cy="132" rx="3" ry="1.4" fill="#7a2c42"/>
-
-  <rect width="220" height="500" fill="#6a4a22" opacity="0.05"/>
-</svg>`;
-
-document.querySelectorAll(".abby-container").forEach((c) => { c.innerHTML = ABBY_SVG; });
+// Abby-SVG aus der Hauptszene in die Vorschau klonen
+// (cloneNode erhält den SVG-Namespace korrekt)
+(function cloneAbbyToPreview() {
+    const src = document.querySelector("#child svg");
+    const dst = document.getElementById("abby-preview");
+    if (src && dst && !dst.querySelector("svg")) {
+        dst.appendChild(src.cloneNode(true));
+    }
+})();
 
 // ---------- Hilfsfunktionen ----------
 function clamp(n, min = 0, max = 100) {

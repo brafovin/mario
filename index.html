@@ -7,13 +7,66 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Geteilte Defs: Verläufe & Filter -->
+    <svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true">
+        <defs>
+            <filter id="rough" x="-6%" y="-6%" width="112%" height="112%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="4" result="n"/>
+                <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4"/>
+            </filter>
+            <filter id="aqua" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="2" result="t"/>
+                <feDisplacementMap in="SourceGraphic" in2="t" scale="4"/>
+            </filter>
+
+            <radialGradient id="g-skin" cx="50%" cy="35%" r="75%">
+                <stop offset="0%" stop-color="#fce4cc"/>
+                <stop offset="60%" stop-color="#f1ccae"/>
+                <stop offset="100%" stop-color="#cfa17e"/>
+            </radialGradient>
+            <radialGradient id="g-cheek" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#f4a6b7" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#f4a6b7" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="g-hair" cx="45%" cy="25%" r="85%">
+                <stop offset="0%" stop-color="#2a1d14"/>
+                <stop offset="60%" stop-color="#120a06"/>
+                <stop offset="100%" stop-color="#040201"/>
+            </radialGradient>
+            <radialGradient id="g-dress" cx="50%" cy="25%" r="85%">
+                <stop offset="0%" stop-color="#ffbed2"/>
+                <stop offset="55%" stop-color="#e88aab"/>
+                <stop offset="100%" stop-color="#a14968"/>
+            </radialGradient>
+            <radialGradient id="g-iris" cx="50%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#7cb4dc"/>
+                <stop offset="60%" stop-color="#2e6ba0"/>
+                <stop offset="100%" stop-color="#153a62"/>
+            </radialGradient>
+            <radialGradient id="g-pajama" cx="50%" cy="20%" r="90%">
+                <stop offset="0%" stop-color="#c9b6e6"/>
+                <stop offset="100%" stop-color="#6e5a98"/>
+            </radialGradient>
+            <radialGradient id="g-shoe" cx="50%" cy="30%" r="80%">
+                <stop offset="0%" stop-color="#6a4326"/>
+                <stop offset="100%" stop-color="#2e1a0c"/>
+            </radialGradient>
+            <radialGradient id="g-bow" cx="50%" cy="30%" r="80%">
+                <stop offset="0%" stop-color="#ff9dc8"/>
+                <stop offset="100%" stop-color="#c0487a"/>
+            </radialGradient>
+        </defs>
+    </svg>
+
     <div id="game">
         <!-- Startbildschirm -->
         <div id="start-screen" class="screen active">
             <h1>The Little Child</h1>
             <p class="subtitle">Sei ein liebevolles Elternteil für Abby</p>
             <div class="child-preview">
-                <div class="abby-container big outfit-dress mood-happy" id="abby-preview"></div>
+                <div class="abby-container big outfit-dress mood-happy" id="abby-preview">
+                    <!-- wird per JS aus #child geklont -->
+                </div>
             </div>
             <p class="intro">
                 Das ist <strong>Abby</strong>, 8 Jahre alt, 3. Klasse.<br>
@@ -40,7 +93,155 @@
                 <div id="scene-bg"></div>
                 <div id="scene-decor"></div>
                 <div id="scene-label">Zuhause</div>
-                <div id="child" class="abby-container outfit-dress mood-happy"></div>
+
+                <!-- Abby (inline, vom HTML-Parser korrekt als SVG interpretiert) -->
+                <div id="child" class="abby-container outfit-dress mood-happy">
+                    <svg viewBox="0 0 220 500" preserveAspectRatio="xMidYMax meet">
+                        <ellipse cx="110" cy="478" rx="62" ry="7" fill="#000" opacity="0.2" filter="url(#rough)"/>
+
+                        <!-- Lange Haare hinten -->
+                        <path filter="url(#rough)" fill="url(#g-hair)"
+                            d="M 68 68 C 30 95, 18 180, 22 300 C 25 370, 45 395, 62 380 L 72 280 C 74 170, 82 110, 95 85 Z
+                               M 152 68 C 190 95, 202 180, 198 300 C 195 370, 175 395, 158 380 L 148 280 C 146 170, 138 110, 125 85 Z"/>
+
+                        <!-- Beine -->
+                        <path filter="url(#rough)" fill="url(#g-skin)"
+                            d="M 88 332 Q 84 402 91 456 Q 98 464 105 456 Q 103 402 99 332 Z"/>
+                        <path filter="url(#rough)" fill="url(#g-skin)"
+                            d="M 132 332 Q 136 402 129 456 Q 122 464 115 456 Q 117 402 121 332 Z"/>
+
+                        <!-- Schuhe -->
+                        <path filter="url(#rough)" fill="url(#g-shoe)"
+                            d="M 84 456 Q 78 478 94 478 Q 108 478 108 466 L 104 453 Z"/>
+                        <path filter="url(#rough)" fill="url(#g-shoe)"
+                            d="M 136 456 Q 142 478 126 478 Q 112 478 112 466 L 116 453 Z"/>
+                        <ellipse cx="96" cy="473" rx="3" ry="1.2" fill="#ffd9b8" opacity="0.7"/>
+                        <ellipse cx="124" cy="473" rx="3" ry="1.2" fill="#ffd9b8" opacity="0.7"/>
+
+                        <!-- Arme -->
+                        <path filter="url(#rough)" fill="url(#g-skin)"
+                            d="M 70 175 Q 54 250 62 318 Q 68 326 76 320 Q 84 250 88 188 Z"/>
+                        <path filter="url(#rough)" fill="url(#g-skin)"
+                            d="M 150 175 Q 166 250 158 318 Q 152 326 144 320 Q 136 250 132 188 Z"/>
+
+                        <!-- Torso -->
+                        <path filter="url(#rough)" fill="url(#g-skin)"
+                            d="M 84 152 Q 100 170 136 152 L 142 228 Q 100 242 78 228 Z"/>
+
+                        <!-- Kleid -->
+                        <g class="o-dress">
+                            <path filter="url(#aqua)" fill="url(#g-dress)"
+                                d="M 74 170 Q 100 188 146 170 L 152 245 Q 100 258 68 245 Z"/>
+                            <path filter="url(#aqua)" fill="url(#g-dress)"
+                                d="M 68 240 Q 100 256 152 240 L 184 348 Q 100 365 36 348 Z"/>
+                            <path d="M 82 170 Q 100 180 138 170 L 138 190 Q 100 200 82 190 Z" fill="#8c3d5d" opacity="0.35"/>
+                            <path d="M 70 240 Q 100 255 150 240 L 152 252 Q 100 266 68 252 Z" fill="#7a1f3a" opacity="0.55"/>
+                            <path d="M 82 260 Q 90 305 72 345" stroke="#7a2a48" stroke-width="1.4" fill="none" opacity="0.5"/>
+                            <path d="M 138 260 Q 130 305 148 345" stroke="#7a2a48" stroke-width="1.4" fill="none" opacity="0.5"/>
+                            <path d="M 110 260 Q 108 305 114 345" stroke="#7a2a48" stroke-width="1" fill="none" opacity="0.35"/>
+                        </g>
+
+                        <!-- Schuluniform -->
+                        <g class="o-school">
+                            <path filter="url(#aqua)" fill="#6b4a2a" d="M 76 232 Q 100 244 144 232 L 162 340 Q 100 356 58 340 Z"/>
+                            <path filter="url(#aqua)" fill="#f7f0dc" d="M 78 170 Q 100 188 142 170 L 148 236 Q 100 248 72 236 Z"/>
+                            <path fill="#ffffff" stroke="#b8a080" stroke-width="0.8" d="M 88 170 L 100 190 L 112 170 Z"/>
+                            <path fill="#b83838" d="M 94 190 L 106 190 L 104 198 L 96 198 Z"/>
+                            <path filter="url(#rough)" fill="#7a3c28" d="M 64 175 L 72 175 L 72 290 L 64 295 Z"/>
+                            <path filter="url(#rough)" fill="#7a3c28" d="M 148 175 L 156 175 L 156 295 L 148 290 Z"/>
+                        </g>
+
+                        <!-- Pyjama -->
+                        <g class="o-pajama">
+                            <path filter="url(#aqua)" fill="url(#g-pajama)" d="M 74 170 Q 100 188 146 170 L 160 346 Q 100 360 58 346 Z"/>
+                            <g fill="#fff8e8" opacity="0.7">
+                                <circle cx="88" cy="205" r="2.6"/><circle cx="122" cy="212" r="2.6"/>
+                                <circle cx="100" cy="235" r="2.6"/><circle cx="82" cy="255" r="2.6"/>
+                                <circle cx="130" cy="263" r="2.6"/><circle cx="110" cy="283" r="2.6"/>
+                                <circle cx="92" cy="310" r="2.6"/><circle cx="128" cy="320" r="2.6"/>
+                            </g>
+                        </g>
+
+                        <!-- Handtuch -->
+                        <g class="o-towel">
+                            <path filter="url(#aqua)" fill="#f8f0e0" stroke="#c7b890" stroke-width="1"
+                                d="M 70 170 Q 100 187 150 170 L 155 302 Q 100 316 65 302 Z"/>
+                            <line x1="75" y1="205" x2="145" y2="205" stroke="#cabe96" stroke-width="1" opacity="0.6"/>
+                            <line x1="75" y1="240" x2="145" y2="240" stroke="#cabe96" stroke-width="1" opacity="0.6"/>
+                            <line x1="75" y1="275" x2="145" y2="275" stroke="#cabe96" stroke-width="1" opacity="0.6"/>
+                        </g>
+
+                        <!-- Hals -->
+                        <path fill="url(#g-skin)" d="M 92 140 L 93 162 Q 100 167 107 162 L 108 140 Z"/>
+                        <path fill="#c48f74" opacity="0.4" d="M 92 152 Q 100 158 108 152 L 108 162 Q 100 166 92 162 Z"/>
+
+                        <!-- Ohren -->
+                        <ellipse cx="61" cy="100" rx="5" ry="9" fill="url(#g-skin)" filter="url(#rough)"/>
+                        <ellipse cx="139" cy="100" rx="5" ry="9" fill="url(#g-skin)" filter="url(#rough)"/>
+
+                        <!-- Kopf -->
+                        <ellipse cx="100" cy="93" rx="38" ry="46" fill="url(#g-skin)" filter="url(#rough)"/>
+
+                        <!-- Pony -->
+                        <path filter="url(#rough)" fill="url(#g-hair)"
+                            d="M 60 72 C 68 35, 100 42, 100 48 C 100 42, 132 35, 140 72 C 144 92, 132 94, 128 90 C 120 82, 110 86, 104 90 C 100 85, 96 85, 92 90 C 86 86, 76 82, 68 90 C 62 94, 56 92, 60 72 Z"/>
+
+                        <!-- Seitliche Haarsträhnen -->
+                        <path filter="url(#rough)" fill="url(#g-hair)"
+                            d="M 58 85 Q 46 180 50 280 Q 56 286 64 280 Q 72 180 76 98 Z"/>
+                        <path filter="url(#rough)" fill="url(#g-hair)"
+                            d="M 162 85 Q 174 180 170 280 Q 164 286 156 280 Q 148 180 144 98 Z"/>
+
+                        <!-- Rosa Schleife im Haar -->
+                        <g filter="url(#rough)">
+                            <path fill="url(#g-bow)" d="M 66 50 Q 52 46 50 58 Q 56 66 70 60 Z"/>
+                            <path fill="url(#g-bow)" d="M 82 50 Q 96 46 98 58 Q 92 66 78 60 Z"/>
+                            <circle cx="74" cy="56" r="3.2" fill="#a63768"/>
+                        </g>
+
+                        <!-- Augenbrauen -->
+                        <path d="M 77 93 Q 85 89 92 93" stroke="#150a06" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                        <path d="M 108 93 Q 115 89 123 93" stroke="#150a06" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+                        <!-- Augen (offen) -->
+                        <g class="eyes-open">
+                            <ellipse cx="85" cy="105" rx="5.2" ry="6.2" fill="#fdfaf0"/>
+                            <ellipse cx="115" cy="105" rx="5.2" ry="6.2" fill="#fdfaf0"/>
+                            <circle cx="85" cy="106" r="3.9" fill="url(#g-iris)"/>
+                            <circle cx="115" cy="106" r="3.9" fill="url(#g-iris)"/>
+                            <circle cx="85" cy="106" r="1.8" fill="#060a14"/>
+                            <circle cx="115" cy="106" r="1.8" fill="#060a14"/>
+                            <circle cx="86.5" cy="104" r="1.1" fill="#ffffff"/>
+                            <circle cx="116.5" cy="104" r="1.1" fill="#ffffff"/>
+                            <path d="M 80 100 Q 85 97 90 100" stroke="#0a0604" stroke-width="1.4" fill="none"/>
+                            <path d="M 110 100 Q 115 97 120 100" stroke="#0a0604" stroke-width="1.4" fill="none"/>
+                            <path d="M 81 108 L 79 111" stroke="#0a0604" stroke-width="0.9"/>
+                            <path d="M 89 108 L 91 111" stroke="#0a0604" stroke-width="0.9"/>
+                            <path d="M 111 108 L 109 111" stroke="#0a0604" stroke-width="0.9"/>
+                            <path d="M 119 108 L 121 111" stroke="#0a0604" stroke-width="0.9"/>
+                        </g>
+
+                        <!-- Augen (zu) -->
+                        <g class="eyes-closed">
+                            <path d="M 80 106 Q 85 111 90 106" stroke="#150a06" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                            <path d="M 110 106 Q 115 111 120 106" stroke="#150a06" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Nase -->
+                        <path d="M 98 114 Q 96 121 94 125 Q 100 129 106 125 Q 104 121 102 114"
+                              stroke="#b57f64" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+
+                        <!-- Wangen -->
+                        <ellipse cx="74" cy="121" rx="9" ry="5.5" fill="url(#g-cheek)"/>
+                        <ellipse cx="126" cy="121" rx="9" ry="5.5" fill="url(#g-cheek)"/>
+
+                        <!-- Mund -->
+                        <path class="mouth-happy" d="M 90 131 Q 100 139 110 131 Q 100 135 90 131 Z" fill="#b84a64" stroke="#7a2c42" stroke-width="1"/>
+                        <path class="mouth-sad" d="M 90 135 Q 100 128 110 135" stroke="#7a2c42" stroke-width="1.5" fill="none"/>
+                        <ellipse class="mouth-sleep" cx="100" cy="133" rx="3" ry="1.4" fill="#7a2c42"/>
+                    </svg>
+                </div>
+
                 <div id="speech-bubble" class="hidden"></div>
                 <div id="outfit-label"></div>
                 <div class="vignette"></div>
