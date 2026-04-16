@@ -11,25 +11,12 @@
         <!-- Startbildschirm -->
         <div id="start-screen" class="screen active">
             <h1>The Little Child</h1>
-            <p class="subtitle">Sei ein liebevolles Elternteil für Mia</p>
+            <p class="subtitle">Sei ein liebevolles Elternteil für Abby</p>
             <div class="child-preview">
-                <div class="child-sprite big">
-                    <div class="hair-back"></div>
-                    <div class="head">
-                        <div class="eye left"></div>
-                        <div class="eye right"></div>
-                        <div class="mouth"></div>
-                    </div>
-                    <div class="hair-front"></div>
-                    <div class="body"></div>
-                    <div class="arm left"></div>
-                    <div class="arm right"></div>
-                    <div class="leg left"></div>
-                    <div class="leg right"></div>
-                </div>
+                <div class="abby-container big outfit-dress mood-happy" id="abby-preview"></div>
             </div>
             <p class="intro">
-                Das ist <strong>Mia</strong>, 8 Jahre alt, 3. Klasse.<br>
+                Das ist <strong>Abby</strong>, 8 Jahre alt, 3. Klasse.<br>
                 Lange schwarze Haare, blaue Augen, ein liebes Mädchen.<br>
                 Du bist ihr Elternteil &ndash; sorge gut für sie!
             </p>
@@ -51,23 +38,12 @@
 
             <main id="scene">
                 <div id="scene-bg"></div>
+                <div id="scene-decor"></div>
                 <div id="scene-label">Zuhause</div>
-                <div id="child" class="child-sprite">
-                    <div class="hair-back"></div>
-                    <div class="head">
-                        <div class="eye left"></div>
-                        <div class="eye right"></div>
-                        <div class="mouth"></div>
-                    </div>
-                    <div class="hair-front"></div>
-                    <div class="body"></div>
-                    <div class="arm left"></div>
-                    <div class="arm right"></div>
-                    <div class="leg left"></div>
-                    <div class="leg right"></div>
-                </div>
+                <div id="child" class="abby-container outfit-dress mood-happy"></div>
                 <div id="speech-bubble" class="hidden"></div>
                 <div id="outfit-label"></div>
+                <div class="vignette"></div>
             </main>
 
             <section id="actions">
@@ -87,7 +63,6 @@
             </aside>
         </div>
 
-        <!-- Modale Ereignisse -->
         <div id="modal" class="modal hidden">
             <div class="modal-content">
                 <h2 id="modal-title"></h2>
@@ -97,7 +72,6 @@
             </div>
         </div>
 
-        <!-- Game Over / Ende -->
         <div id="end-screen" class="screen">
             <h1 id="end-title">Ende</h1>
             <p id="end-text"></p>
